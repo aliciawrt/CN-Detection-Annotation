@@ -4,21 +4,20 @@ import requests
 from bs4 import BeautifulSoup as bs
 from pathlib import Path
 
-# Der SQL Part um die CoinIDs zu bekommen die SQLQuery und den Connector muss man dann an den Rechner anpassen
+# TO DO: fill in according to your credentials
 mydb = mysql.connector.connect(
     host="127.0.0.1",
     port="3306",
-    user="reader",
-    password="sqlread"
+    user="user",
+    password="password"
 )
 
+# TO DO: specify what pictures you want to download
 entity_label = "ANIMAL"
-entity = "dolphin"
+entity = "lion"
 
 mycursor = mydb.cursor()
-
 mycursor.execute("select id_coin, side from fp.dc_coin_design_mapping, fp.cnt_pipeline_ner, fp.thrakien_images where Label_Entity=\"" + entity_label + "\" and Entity = \"" + entity + "\" and id_design = DesignID and id_coin = CoinID and ObjectType=\"original\" group by id_coin, side order by id_coin;")
-
 myresult = mycursor.fetchall()
 
 coin_ids = []
@@ -26,11 +25,10 @@ coin_ids = []
 for x in myresult:
     coin_ids.append(x)
 
-# Als Test die Liste etwas verkleinert
-coin_ids = coin_ids[:30]
+coin_ids = coin_ids
 
 # Image Downloader
-# Adding information about user agent ---- Braucht man gegen nen Error
+# Adding information about user agent
 opener = urllib.request.build_opener()
 opener.addheaders = [
     ('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
